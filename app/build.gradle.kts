@@ -67,6 +67,21 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
+    // OkHttp3
+    implementation(libs.okhttp3)
+    implementation(libs.okhttp3.logging.interceptor)
+    implementation(libs.okhttp3.urlconnection)
+
+    // Retrofit
+    // https://square.github.io/retrofit/
+    implementation(libs.retrofit2)
+    implementation(libs.retrofit2.converter.moshi)
+    
+    //Moshi
+    implementation(libs.squareup.moshi)
+    implementation(libs.squareup.moshi.kotlin)
+    kapt(libs.squareup.moshi.kotlin.codegen)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
