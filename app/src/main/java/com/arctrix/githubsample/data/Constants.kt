@@ -1,4 +1,4 @@
-package com.arctrix.githubsample.util
+package com.arctrix.githubsample.data
 
 object Constants {
 

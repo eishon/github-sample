@@ -2,7 +2,7 @@ package com.arctrix.githubsample.data.repository.helper
 
 import com.arctrix.githubsample.util.interceptors.NoConnectivityException
 import com.arctrix.githubsample.data.model.Result
-import com.arctrix.githubsample.util.Constants
+import com.arctrix.githubsample.data.Constants
 import retrofit2.HttpException
 
 object RepositoryHelper {

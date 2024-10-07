@@ -1,4 +1,4 @@
-package com.arctrix.githubsample.ui.theme
+package com.arctrix.githubsample.ui.common.theme
 
 import androidx.compose.ui.graphics.Color
 

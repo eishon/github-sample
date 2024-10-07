@@ -1,6 +1,6 @@
 package com.arctrix.githubsample.di
 
-import com.arctrix.githubsample.util.Constants
+import com.arctrix.githubsample.data.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,6 +1,5 @@
-package com.arctrix.githubsample.ui.theme
+package com.arctrix.githubsample.ui.common.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
