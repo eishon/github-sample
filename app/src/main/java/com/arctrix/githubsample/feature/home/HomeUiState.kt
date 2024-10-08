@@ -1,4 +1,4 @@
-package com.arctrix.githubsample.ui.home
+package com.arctrix.githubsample.feature.home
 
 import com.arctrix.githubsample.data.model.github.User
 

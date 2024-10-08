@@ -1,4 +1,4 @@
-package com.arctrix.githubsample.ui.common.theme
+package com.arctrix.githubsample.feature.common.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -1,4 +1,4 @@
-package com.arctrix.githubsample.ui.home
+package com.arctrix.githubsample.feature.user_list
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,7 +20,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
@@ -39,37 +37,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import coil.compose.AsyncImage
 import com.arctrix.githubsample.R
 import com.arctrix.githubsample.data.model.github.User
-import com.arctrix.githubsample.ui.common.theme.GithubSampleTheme
-
-@Composable
-fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") {
-            UserListScreen(navController, viewModel)
-        }
-        composable(
-            "details/{userId}",
-            arguments = listOf(navArgument("userId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId")
-            UserDetailsScreen(userId)
-        }
-    }
-}
+import com.arctrix.githubsample.feature.home.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -143,22 +117,6 @@ fun UserListScreen(navController: NavController, viewModel: HomeViewModel) {
 }
 
 @Composable
-fun UserDetailsScreen(userId: Int?) {
-    // Implement the UI to show user details based on userId
-    Scaffold(
-        content = { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-            ) {
-                Text(text = "User ID: $userId")
-            }
-        }
-    )
-}
-
-@Composable
 fun UserListItemStateless(user: User, backgroundColor: Color, onClick: (Int) -> Unit) {
     ListItem(
         headlineContent = {
@@ -190,12 +148,4 @@ fun UserListItemStateless(user: User, backgroundColor: Color, onClick: (Int) -> 
             .clip(RoundedCornerShape(16.dp)) // Apply rounded corners
             .border(2.dp, Color.Gray, RoundedCornerShape(16.dp))
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SearchScreenPreview() {
-    GithubSampleTheme {
-        HomeScreen()
-    }
 }

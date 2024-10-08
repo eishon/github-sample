@@ -1,4 +1,4 @@
-package com.arctrix.githubsample.ui.home
+package com.arctrix.githubsample.feature.home
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.arctrix.githubsample.ui.common.theme.GithubSampleTheme
+import com.arctrix.githubsample.feature.common.theme.GithubSampleTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
