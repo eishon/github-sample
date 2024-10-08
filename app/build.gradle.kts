@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
@@ -83,6 +84,9 @@ dependencies {
     implementation(libs.squareup.moshi)
     implementation(libs.squareup.moshi.kotlin)
     kapt(libs.squareup.moshi.kotlin.codegen)
+
+    // Coil
+    implementation(libs.coil.kotlin)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
