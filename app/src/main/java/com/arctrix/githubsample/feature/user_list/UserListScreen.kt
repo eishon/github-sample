@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -41,6 +42,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -124,7 +129,12 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel = 
 }
 
 @Composable
-fun UserListStateLess(users: List<UserItem>, navController: NavController, backgroundColor: Color) {
+
+fun UserListStateLess(
+    users: List<UserItem>,
+    navController: NavController,
+    backgroundColor: Color
+) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -135,7 +145,8 @@ fun UserListStateLess(users: List<UserItem>, navController: NavController, backg
         items(count = users.size) {
             UserListItemStateless(
                 userItem = users[it],
-                backgroundColor
+                inverted = it % 2 == 0,
+                backgroundColor = backgroundColor
             ) { userId ->
                 navController.navigate("details/$userId")
             }
@@ -144,15 +155,53 @@ fun UserListStateLess(users: List<UserItem>, navController: NavController, backg
 }
 
 @Composable
-fun UserListItemStateless(userItem: UserItem, backgroundColor: Color, onClick: (String) -> Unit) {
+fun UserListItemStateless(
+    userItem: UserItem,
+    backgroundColor: Color,
+    inverted: Boolean = false,
+    onClick: (String) -> Unit
+) {
     Card {
         ListItem(
             headlineContent = {
                 Text(userItem.login)
             },
-            supportingContent = { Text("Additional info") },
+            supportingContent = {
+                val annotatedString = buildAnnotatedString {
+                    pushStringAnnotation(tag = "URL", annotation = userItem.htmlUrl)
+                    withStyle(
+                        style = SpanStyle(
+                            color = Color.Gray,
+                            textDecoration = TextDecoration.Underline
+                        )
+                    ) {
+                        append(userItem.htmlUrl)
+                    }
+                    pop()
+                }
+                BasicText(
+                    text = annotatedString,
+                    modifier = Modifier.clickable {
+                        // Handle the click event, e.g., open the URL in a browser
+                        // You can use a context to start an activity or use a callback
+                    }
+                )
+            },
             leadingContent = {
-                AsyncImage(
+                if (inverted.not()) AsyncImage(
+                    model = userItem.avatarUrl,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
+                        .border(
+                            2.dp,
+                            Color.Gray,
+                            RoundedCornerShape(8.dp)
+                        ) // Apply border with rounded corners
+                )
+            }, trailingContent = {
+                if (inverted) AsyncImage(
                     model = userItem.avatarUrl,
                     contentDescription = null,
                     modifier = Modifier
