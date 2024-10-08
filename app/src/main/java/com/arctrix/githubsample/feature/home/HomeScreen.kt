@@ -15,8 +15,8 @@ import com.arctrix.githubsample.feature.user_list.UserListScreen
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") {
+    NavHost(navController = navController, startDestination = "users") {
+        composable("users") {
             UserListScreen(navController, viewModel)
         }
         composable(
@@ -24,11 +24,10 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
             arguments = listOf(navArgument("userId") { type = NavType.IntType })
         ) { backStackEntry ->
             val userId = backStackEntry.arguments?.getInt("userId")
-            UserDetailsScreen(userId)
+            UserDetailsScreen(navController,userId)
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 fun SearchScreenPreview() {

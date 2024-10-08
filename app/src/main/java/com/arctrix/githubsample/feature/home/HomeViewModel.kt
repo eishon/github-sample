@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val gitHubRepository: GitHubRepository
+    private val gitHubUserRepository: GitHubRepository
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<HomeUiState> =
@@ -22,10 +22,18 @@ class HomeViewModel @Inject constructor(
     val uiState: StateFlow<HomeUiState>
         get() = _uiState.asStateFlow()
 
-    fun loadAllUsers() {
+    fun loadUsers(searchKey: String = "") {
+        if (searchKey.isEmpty()) {
+            loadAllUsers()
+        } else {
+            loadSearchedUsers(searchKey)
+        }
+    }
+
+    private fun loadAllUsers() {
         viewModelScope.launch {
             displayLoading()
-            when (val result = gitHubRepository.getUsers()) {
+            when (val result = gitHubUserRepository.getUsers()) {
                 is ApiResult.Success -> {
                     _uiState.update {
                         it.copy(
@@ -35,15 +43,17 @@ class HomeViewModel @Inject constructor(
                         )
                     }
                 }
+
                 else -> handleError(result)
             }
+
         }
     }
 
-    fun loadSearchedUsers(searchKey: String = "") {
+    private fun loadSearchedUsers(searchKey: String = "") {
         viewModelScope.launch {
             displayLoading()
-            when (val result = gitHubRepository.getSearchUsers(searchKey)) {
+            when (val result = gitHubUserRepository.getSearchUsers(searchKey)) {
                 is ApiResult.Success -> {
                     _uiState.update {
                         it.copy(
@@ -53,6 +63,7 @@ class HomeViewModel @Inject constructor(
                         )
                     }
                 }
+
                 else -> handleError(result)
             }
         }

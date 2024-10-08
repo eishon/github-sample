@@ -58,7 +58,7 @@ fun UserListScreen(navController: NavController, viewModel: HomeViewModel) {
 
     // Call the function once when the screen is first created
     LaunchedEffect(Unit) {
-        viewModel.loadAllUsers()
+        viewModel.loadUsers(searchText)
     }
 
     Column(
@@ -77,7 +77,7 @@ fun UserListScreen(navController: NavController, viewModel: HomeViewModel) {
                     onQueryChange = { searchText = it },
                     onSearch = {
                         expanded = false
-                        viewModel.loadSearchedUsers(searchText)
+                        viewModel.loadUsers(searchText)
                     },
                     expanded = expanded,
                     onExpandedChange = { expanded = it },
