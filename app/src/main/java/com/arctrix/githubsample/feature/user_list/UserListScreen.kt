@@ -53,6 +53,8 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.arctrix.githubsample.R
 import com.arctrix.githubsample.data.model.github.UserItem
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -129,7 +131,6 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel = 
 }
 
 @Composable
-
 fun UserListStateLess(
     users: List<UserItem>,
     navController: NavController,
@@ -146,10 +147,14 @@ fun UserListStateLess(
             UserListItemStateless(
                 userItem = users[it],
                 inverted = it % 2 == 0,
-                backgroundColor = backgroundColor
-            ) { userId ->
-                navController.navigate("details/$userId")
-            }
+                backgroundColor = backgroundColor,
+                onClick = { userId ->
+                    navController.navigate("details/$userId")
+                },
+                onProfileUrlClick = { profileUrl ->
+                    navController.navigate("webview/$profileUrl")
+                }
+            )
         }
     }
 }
@@ -159,6 +164,7 @@ fun UserListItemStateless(
     userItem: UserItem,
     backgroundColor: Color,
     inverted: Boolean = false,
+    onProfileUrlClick: (String) -> Unit,
     onClick: (String) -> Unit
 ) {
     Card {
@@ -182,8 +188,11 @@ fun UserListItemStateless(
                 BasicText(
                     text = annotatedString,
                     modifier = Modifier.clickable {
-                        // Handle the click event, e.g., open the URL in a browser
-                        // You can use a context to start an activity or use a callback
+                        val encodedUrl = URLEncoder.encode(
+                            userItem.htmlUrl,
+                            StandardCharsets.UTF_8.toString()
+                        )
+                        onProfileUrlClick(encodedUrl)
                     }
                 )
             },
