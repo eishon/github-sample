@@ -3,12 +3,12 @@ package com.arctrix.githubsample.data.model
 /**
  * Sealed class to wrap the API call result
  */
-sealed class Result<out T> {
+sealed class ApiResult<out T> {
 
     /**
      * If the API call is successful, it will be wrapped as Success<T>
      */
-    data class Success<out T>(val data: T) : Result<T>()
+    data class Success<out T>(val data: T) : ApiResult<T>()
 
     /**
      * Generic error
@@ -16,7 +16,7 @@ sealed class Result<out T> {
     data class GenericError(
         val code: Int? = null,
         val message: String? = null
-    ) : Result<Nothing>()
+    ) : ApiResult<Nothing>()
 
     /**
      * If there is an error in the API call
@@ -24,10 +24,10 @@ sealed class Result<out T> {
     data class HTTPError(
         val code: Int? = null,
         val message: String? = null
-    ) : Result<Nothing>()
+    ) : ApiResult<Nothing>()
 
     /**
      * If the device is not connected to internet
      */
-    data object NetworkError : Result<Nothing>()
+    data object NetworkError : ApiResult<Nothing>()
 }
