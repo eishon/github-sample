@@ -1,7 +1,6 @@
 package com.arctrix.githubsample.feature.user_list
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -12,10 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -36,25 +32,22 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
+import androidx.navigation.compose.rememberNavController
 import com.arctrix.githubsample.R
 import com.arctrix.githubsample.data.model.github.UserItem
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import com.arctrix.githubsample.feature.common.theme.GithubSampleTheme
+import com.arctrix.githubsample.feature.common.widgets.ProfileImage
+import com.arctrix.githubsample.feature.common.widgets.ProfileLink
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -119,7 +112,7 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel = 
                 } else if (uiState.error.isNullOrEmpty().not()) {
                     Text(text = "Error: ${uiState.error}")
                 } else {
-                    UserListStateLess(
+                    UserList(
                         users = uiState.users,
                         navController = navController,
                         backgroundColor = backgroundColor
@@ -131,7 +124,7 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel = 
 }
 
 @Composable
-fun UserListStateLess(
+fun UserList(
     users: List<UserItem>,
     navController: NavController,
     backgroundColor: Color
@@ -144,7 +137,7 @@ fun UserListStateLess(
         },
     ) {
         items(count = users.size) {
-            UserListItemStateless(
+            UserListItem(
                 userItem = users[it],
                 inverted = it % 2 == 0,
                 backgroundColor = backgroundColor,
@@ -160,7 +153,7 @@ fun UserListStateLess(
 }
 
 @Composable
-fun UserListItemStateless(
+fun UserListItem(
     userItem: UserItem,
     backgroundColor: Color,
     inverted: Boolean = false,
@@ -173,55 +166,15 @@ fun UserListItemStateless(
                 Text(userItem.login)
             },
             supportingContent = {
-                val annotatedString = buildAnnotatedString {
-                    pushStringAnnotation(tag = "URL", annotation = userItem.htmlUrl)
-                    withStyle(
-                        style = SpanStyle(
-                            color = Color.Gray,
-                            textDecoration = TextDecoration.Underline
-                        )
-                    ) {
-                        append(userItem.htmlUrl)
-                    }
-                    pop()
+                ProfileLink(profileUrl = userItem.htmlUrl) { profileUrl ->
+                    onProfileUrlClick(userItem.login, profileUrl)
                 }
-                BasicText(
-                    text = annotatedString,
-                    modifier = Modifier.clickable {
-                        val encodedUrl = URLEncoder.encode(
-                            userItem.htmlUrl,
-                            StandardCharsets.UTF_8.toString()
-                        )
-                        onProfileUrlClick(userItem.login, encodedUrl)
-                    }
-                )
             },
             leadingContent = {
-                if (inverted.not()) AsyncImage(
-                    model = userItem.avatarUrl,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
-                        .border(
-                            2.dp,
-                            Color.Gray,
-                            RoundedCornerShape(8.dp)
-                        ) // Apply border with rounded corners
-                )
-            }, trailingContent = {
-                if (inverted) AsyncImage(
-                    model = userItem.avatarUrl,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
-                        .border(
-                            2.dp,
-                            Color.Gray,
-                            RoundedCornerShape(8.dp)
-                        ) // Apply border with rounded corners
-                )
+                if (inverted.not()) ProfileImage(imageUrl = userItem.avatarUrl)
+            },
+            trailingContent = {
+                if (inverted) ProfileImage(imageUrl = userItem.avatarUrl)
             },
             colors = ListItemDefaults.colors(containerColor = backgroundColor),
             modifier = Modifier
@@ -232,5 +185,14 @@ fun UserListItemStateless(
                 .fillMaxWidth()
                 .height(96.dp)
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun UserListScreenPreview() {
+    val navController = rememberNavController()
+    GithubSampleTheme {
+        UserListScreen(navController = navController)
     }
 }

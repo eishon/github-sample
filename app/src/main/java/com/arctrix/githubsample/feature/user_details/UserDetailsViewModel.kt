@@ -27,7 +27,7 @@ class UserDetailsViewModel @Inject constructor(
                 is ApiResult.Success -> {
                     _uiState.update {
                         it.copy(
-                            userDetails = result.data,
+                            userDetail = result.data,
                             isLoading = false,
                             error = null
                         )
