@@ -17,7 +17,7 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserDetailsScreen(navController: NavController, userId: Int?) {
+fun UserDetailsScreen(navController: NavController, userId: String?) {
     // Implement the UI to show user details based on userId
     Scaffold(
         topBar = {

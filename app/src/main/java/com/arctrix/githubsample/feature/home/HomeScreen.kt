@@ -11,9 +11,10 @@ import androidx.navigation.navArgument
 import com.arctrix.githubsample.feature.common.theme.GithubSampleTheme
 import com.arctrix.githubsample.feature.user_details.UserDetailsScreen
 import com.arctrix.githubsample.feature.user_list.UserListScreen
+import com.arctrix.githubsample.feature.user_list.UserListViewModel
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
+fun HomeScreen(viewModel: UserListViewModel = viewModel()) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "users") {
         composable("users") {
@@ -21,13 +22,14 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
         }
         composable(
             "details/{userId}",
-            arguments = listOf(navArgument("userId") { type = NavType.IntType })
+            arguments = listOf(navArgument("userId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId")
-            UserDetailsScreen(navController,userId)
+            val userId = backStackEntry.arguments?.getString("userId")
+            UserDetailsScreen(navController, userId)
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun SearchScreenPreview() {

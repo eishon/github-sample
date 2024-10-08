@@ -1,4 +1,4 @@
-package com.arctrix.githubsample.feature.home
+package com.arctrix.githubsample.feature.user_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,13 +13,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class UserListViewModel @Inject constructor(
     private val gitHubUserRepository: GitHubRepository
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<HomeUiState> =
-        MutableStateFlow(HomeUiState())
-    val uiState: StateFlow<HomeUiState>
+    private val _uiState: MutableStateFlow<UserListUiState> =
+        MutableStateFlow(UserListUiState())
+    val uiState: StateFlow<UserListUiState>
         get() = _uiState.asStateFlow()
 
     fun loadUsers(searchKey: String = "") {

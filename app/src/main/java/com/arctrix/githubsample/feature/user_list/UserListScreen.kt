@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
@@ -43,11 +45,10 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.arctrix.githubsample.R
 import com.arctrix.githubsample.data.model.github.User
-import com.arctrix.githubsample.feature.home.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserListScreen(navController: NavController, viewModel: HomeViewModel) {
+fun UserListScreen(navController: NavController, viewModel: UserListViewModel) {
     val isDarkTheme = isSystemInDarkTheme()
     val backgroundColor = if (isDarkTheme) Color.Black else Color.White
 
@@ -55,69 +56,79 @@ fun UserListScreen(navController: NavController, viewModel: HomeViewModel) {
 
     var searchText by rememberSaveable { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(false) }
+    var users by rememberSaveable { mutableStateOf(emptyList<User>()) }
 
     // Call the function once when the screen is first created
     LaunchedEffect(Unit) {
         viewModel.loadUsers(searchText)
     }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .semantics { isTraversalGroup = true }
-    ) {
-        SearchBar(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .semantics { traversalIndex = 0f },
-            inputField = {
-                SearchBarDefaults.InputField(
-                    query = searchText,
-                    onQueryChange = { searchText = it },
-                    onSearch = {
-                        expanded = false
-                        viewModel.loadUsers(searchText)
-                    },
-                    expanded = expanded,
-                    onExpandedChange = { expanded = it },
-                    placeholder = { Text(stringResource(id = R.string.search_hint)) },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                )
-            },
-            expanded = expanded,
-            onExpandedChange = { expanded = it },
-        ) {
-            // implement for search suggestions
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (uiState.isLoading) {
-            CircularProgressIndicator()
-        } else if (uiState.error.isNullOrEmpty().not()) {
-            Text(text = "Error: ${uiState.error}")
-        } else {
-            LazyColumn(
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.semantics {
-                    traversalIndex = 1f
+    Scaffold(
+        topBar = {
+            SearchBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .semantics { traversalIndex = 0f },
+                inputField = {
+                    SearchBarDefaults.InputField(
+                        query = searchText,
+                        onQueryChange = { searchText = it },
+                        onSearch = {
+                            expanded = false
+                            viewModel.loadUsers(searchText)
+                        },
+                        expanded = expanded,
+                        onExpandedChange = { expanded = it },
+                        placeholder = { Text(stringResource(id = R.string.search_hint)) },
+                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    )
                 },
+                expanded = expanded,
+                onExpandedChange = { expanded = it },
             ) {
-                val list = uiState.users
-                items(count = list.size) {
-                    UserListItemStateless(user = list[it], backgroundColor) { userId ->
-                        navController.navigate("details/$userId")
+                // implement for search suggestions
+            }
+        },
+        content = { innerPadding ->
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .semantics { isTraversalGroup = true }
+            ) {
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                if (uiState.isLoading) {
+                    CircularProgressIndicator()
+                } else if (uiState.error.isNullOrEmpty().not()) {
+                    Text(text = "Error: ${uiState.error}")
+                } else {
+                    LazyColumn(
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.semantics {
+                            traversalIndex = 1f
+                        },
+                    ) {
+                        users = uiState.users
+                        items(count = users.size) {
+                            UserListItemStateless(user = users[it], backgroundColor) { userId ->
+                                navController.navigate("details/$userId")
+                            }
+                        }
                     }
                 }
             }
         }
-    }
+    )
 }
 
 @Composable
-fun UserListItemStateless(user: User, backgroundColor: Color, onClick: (Int) -> Unit) {
+fun UserListItemStateless(user: User, backgroundColor: Color, onClick: (String) -> Unit) {
     ListItem(
         headlineContent = {
             Text(user.login)
@@ -141,7 +152,7 @@ fun UserListItemStateless(user: User, backgroundColor: Color, onClick: (Int) -> 
         modifier = Modifier
             .clickable {
                 // Navigate to user details screen
-                onClick(user.id)
+                onClick(user.login)
             }
             .fillMaxWidth()
             .height(96.dp)
