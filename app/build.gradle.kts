@@ -86,7 +86,8 @@ dependencies {
     kapt(libs.squareup.moshi.kotlin.codegen)
 
     // Coil
-    implementation(libs.coil.kotlin)
+    implementation(libs.coil.base)
+    implementation(libs.coil.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
