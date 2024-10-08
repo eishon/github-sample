@@ -19,11 +19,11 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WebViewScreen(navController: NavController, url: String?) {
+fun WebViewScreen(navController: NavController, userId: String?, url: String?) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("") },
+                title = { Text("$userId") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(

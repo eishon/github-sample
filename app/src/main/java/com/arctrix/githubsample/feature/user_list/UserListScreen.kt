@@ -151,8 +151,8 @@ fun UserListStateLess(
                 onClick = { userId ->
                     navController.navigate("details/$userId")
                 },
-                onProfileUrlClick = { profileUrl ->
-                    navController.navigate("webview/$profileUrl")
+                onProfileUrlClick = { userId, profileUrl ->
+                    navController.navigate("webview/$userId/$profileUrl")
                 }
             )
         }
@@ -164,7 +164,7 @@ fun UserListItemStateless(
     userItem: UserItem,
     backgroundColor: Color,
     inverted: Boolean = false,
-    onProfileUrlClick: (String) -> Unit,
+    onProfileUrlClick: (String, String) -> Unit,
     onClick: (String) -> Unit
 ) {
     Card {
@@ -192,7 +192,7 @@ fun UserListItemStateless(
                             userItem.htmlUrl,
                             StandardCharsets.UTF_8.toString()
                         )
-                        onProfileUrlClick(encodedUrl)
+                        onProfileUrlClick(userItem.login, encodedUrl)
                     }
                 )
             },

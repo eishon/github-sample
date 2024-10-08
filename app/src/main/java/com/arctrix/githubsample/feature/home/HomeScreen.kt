@@ -27,11 +27,15 @@ fun HomeScreen() {
             UserDetailsScreen(navController, userId)
         }
         composable(
-            "webview/{profile_url}",
-            arguments = listOf(navArgument("profile_url") { type = NavType.StringType })
+            "webview/{userId}/{profileUrl}",
+            arguments = listOf(
+                navArgument("userId") { type = NavType.StringType },
+                navArgument("profileUrl") { type = NavType.StringType }
+            )
         ) { backStackEntry ->
-            val profileUrl = backStackEntry.arguments?.getString("profile_url")
-            WebViewScreen(navController, profileUrl)
+            val userId = backStackEntry.arguments?.getString("userId")
+            val profileUrl = backStackEntry.arguments?.getString("profileUrl")
+            WebViewScreen(navController, userId, profileUrl)
         }
     }
 }

@@ -47,7 +47,7 @@ fun UserDetailsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("") },
+                title = { Text("$userId") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
