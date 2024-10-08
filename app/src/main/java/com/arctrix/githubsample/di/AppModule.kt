@@ -11,6 +11,7 @@ import javax.inject.Named
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
+
     @Provides
     @Named("app_name")
     fun providesPackageTitle(): String {
