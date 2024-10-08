@@ -37,7 +37,7 @@ class UserListViewModel @Inject constructor(
                 is ApiResult.Success -> {
                     _uiState.update {
                         it.copy(
-                            userItems = result.data,
+                            users = result.data,
                             isLoading = false,
                             error = null
                         )
@@ -57,7 +57,7 @@ class UserListViewModel @Inject constructor(
                 is ApiResult.Success -> {
                     _uiState.update {
                         it.copy(
-                            userItems = result.data.items ?: emptyList(),
+                            users = result.data.items ?: emptyList(),
                             isLoading = false,
                             error = null
                         )

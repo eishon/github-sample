@@ -58,10 +58,12 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel = 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     var searchText by rememberSaveable { mutableStateOf("") }
-    var userItems by rememberSaveable { mutableStateOf(emptyList<UserItem>()) }
 
     var expanded by rememberSaveable { mutableStateOf(false) }
-    val searchBarPadding by animateDpAsState(targetValue = if (expanded) 0.dp else 16.dp, label = "")
+    val searchBarPadding by animateDpAsState(
+        targetValue = if (expanded) 0.dp else 16.dp,
+        label = ""
+    )
 
     // Call the function once when the screen is first created
     LaunchedEffect(Unit) {
@@ -110,27 +112,35 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel = 
                 } else if (uiState.error.isNullOrEmpty().not()) {
                     Text(text = "Error: ${uiState.error}")
                 } else {
-                    LazyColumn(
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.semantics {
-                            traversalIndex = 1f
-                        },
-                    ) {
-                        userItems = uiState.userItems
-                        items(count = userItems.size) {
-                            UserListItemStateless(
-                                userItem = userItems[it],
-                                backgroundColor
-                            ) { userId ->
-                                navController.navigate("details/$userId")
-                            }
-                        }
-                    }
+                    UserListStateLess(
+                        users = uiState.users,
+                        navController = navController,
+                        backgroundColor = backgroundColor
+                    )
                 }
             }
         }
     )
+}
+
+@Composable
+fun UserListStateLess(users: List<UserItem>, navController: NavController, backgroundColor: Color) {
+    LazyColumn(
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.semantics {
+            traversalIndex = 1f
+        },
+    ) {
+        items(count = users.size) {
+            UserListItemStateless(
+                userItem = users[it],
+                backgroundColor
+            ) { userId ->
+                navController.navigate("details/$userId")
+            }
+        }
+    }
 }
 
 @Composable
@@ -163,7 +173,6 @@ fun UserListItemStateless(userItem: UserItem, backgroundColor: Color, onClick: (
                 }
                 .fillMaxWidth()
                 .height(96.dp)
-
         )
     }
 }
