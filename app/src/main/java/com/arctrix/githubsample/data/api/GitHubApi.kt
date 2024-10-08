@@ -1,15 +1,20 @@
 package com.arctrix.githubsample.data.api
 
 import com.arctrix.githubsample.data.model.github.SearchUserResponse
-import com.arctrix.githubsample.data.model.github.User
+import com.arctrix.githubsample.data.model.github.UserDetail
+import com.arctrix.githubsample.data.model.github.UserItem
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface GitHubApi {
 
     @GET("users")
-    suspend fun getUsers(): List<User>
+    suspend fun getUsers(): List<UserItem>
 
     @GET("search/users")
     suspend fun getUsersSearch(@Query("q") query: String): SearchUserResponse
+
+    @GET("users/{userId}")
+    suspend fun getUsersDetails(@Path("userId") query: String): UserDetail
 }

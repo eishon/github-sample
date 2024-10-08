@@ -69,6 +69,7 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 
     // OkHttp3
     implementation(libs.okhttp3)

@@ -12,5 +12,5 @@ data class SearchUserResponse(
     val totalCount: Int,
     @Json(name = "incomplete_results")
     val incompleteResults: Boolean,
-    val items: List<User>
+    val items: List<UserItem>
 ) : Parcelable

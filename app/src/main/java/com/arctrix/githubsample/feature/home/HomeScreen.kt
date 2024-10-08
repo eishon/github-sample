@@ -14,11 +14,11 @@ import com.arctrix.githubsample.feature.user_list.UserListScreen
 import com.arctrix.githubsample.feature.user_list.UserListViewModel
 
 @Composable
-fun HomeScreen(viewModel: UserListViewModel = viewModel()) {
+fun HomeScreen() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "users") {
         composable("users") {
-            UserListScreen(navController, viewModel)
+            UserListScreen(navController)
         }
         composable(
             "details/{userId}",

@@ -1,5 +1,6 @@
 package com.arctrix.githubsample.feature.user_list
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -40,23 +42,26 @@ import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.arctrix.githubsample.R
-import com.arctrix.githubsample.data.model.github.User
+import com.arctrix.githubsample.data.model.github.UserItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserListScreen(navController: NavController, viewModel: UserListViewModel) {
+fun UserListScreen(navController: NavController, viewModel: UserListViewModel = hiltViewModel()) {
     val isDarkTheme = isSystemInDarkTheme()
     val backgroundColor = if (isDarkTheme) Color.Black else Color.White
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     var searchText by rememberSaveable { mutableStateOf("") }
+    var userItems by rememberSaveable { mutableStateOf(emptyList<UserItem>()) }
+
     var expanded by rememberSaveable { mutableStateOf(false) }
-    var users by rememberSaveable { mutableStateOf(emptyList<User>()) }
+    val searchBarPadding by animateDpAsState(targetValue = if (expanded) 0.dp else 16.dp, label = "")
 
     // Call the function once when the screen is first created
     LaunchedEffect(Unit) {
@@ -68,7 +73,7 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel) {
             SearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = searchBarPadding)
                     .semantics { traversalIndex = 0f },
                 inputField = {
                     SearchBarDefaults.InputField(
@@ -98,9 +103,7 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel) {
                     .padding(innerPadding)
                     .semantics { isTraversalGroup = true }
             ) {
-
-
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 if (uiState.isLoading) {
                     CircularProgressIndicator()
@@ -114,9 +117,12 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel) {
                             traversalIndex = 1f
                         },
                     ) {
-                        users = uiState.users
-                        items(count = users.size) {
-                            UserListItemStateless(user = users[it], backgroundColor) { userId ->
+                        userItems = uiState.userItems
+                        items(count = userItems.size) {
+                            UserListItemStateless(
+                                userItem = userItems[it],
+                                backgroundColor
+                            ) { userId ->
                                 navController.navigate("details/$userId")
                             }
                         }
@@ -128,35 +134,36 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel) {
 }
 
 @Composable
-fun UserListItemStateless(user: User, backgroundColor: Color, onClick: (String) -> Unit) {
-    ListItem(
-        headlineContent = {
-            Text(user.login)
-        },
-        supportingContent = { Text("Additional info") },
-        leadingContent = {
-            AsyncImage(
-                model = user.avatarUrl,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(RoundedCornerShape(16.dp)) // Apply rounded corners
-                    .border(
-                        2.dp,
-                        Color.Gray,
-                        RoundedCornerShape(16.dp)
-                    ) // Apply border with rounded corners
-            )
-        },
-        colors = ListItemDefaults.colors(containerColor = backgroundColor),
-        modifier = Modifier
-            .clickable {
-                // Navigate to user details screen
-                onClick(user.login)
-            }
-            .fillMaxWidth()
-            .height(96.dp)
-            .clip(RoundedCornerShape(16.dp)) // Apply rounded corners
-            .border(2.dp, Color.Gray, RoundedCornerShape(16.dp))
-    )
+fun UserListItemStateless(userItem: UserItem, backgroundColor: Color, onClick: (String) -> Unit) {
+    Card {
+        ListItem(
+            headlineContent = {
+                Text(userItem.login)
+            },
+            supportingContent = { Text("Additional info") },
+            leadingContent = {
+                AsyncImage(
+                    model = userItem.avatarUrl,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
+                        .border(
+                            2.dp,
+                            Color.Gray,
+                            RoundedCornerShape(8.dp)
+                        ) // Apply border with rounded corners
+                )
+            },
+            colors = ListItemDefaults.colors(containerColor = backgroundColor),
+            modifier = Modifier
+                .clickable {
+                    // Navigate to user details screen
+                    onClick(userItem.login)
+                }
+                .fillMaxWidth()
+                .height(96.dp)
+
+        )
+    }
 }

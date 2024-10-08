@@ -9,6 +9,7 @@ lifecycleRuntimeKtx = "2.8.6"
 activityCompose = "1.9.2"
 composeBom = "2024.09.03"
 hilt = "2.51.1"
+hiltNavigationCompose = "1.0.0"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
 moshi = "1.15.1"
@@ -38,6 +39,7 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 hilt-gradle = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "hilt" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
 okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }

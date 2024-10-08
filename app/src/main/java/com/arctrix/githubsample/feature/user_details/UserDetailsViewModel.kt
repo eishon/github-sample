@@ -1,4 +1,4 @@
-package com.arctrix.githubsample.feature.user_list
+package com.arctrix.githubsample.feature.user_details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,62 +13,30 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserListViewModel @Inject constructor(
+class UserDetailsViewModel @Inject constructor(
     private val gitHubUserRepository: GitHubRepository
 ) : ViewModel() {
-
-    private val _uiState: MutableStateFlow<UserListUiState> =
-        MutableStateFlow(UserListUiState())
-    val uiState: StateFlow<UserListUiState>
+    private val _uiState: MutableStateFlow<UserDetailsUiState> =
+        MutableStateFlow(UserDetailsUiState())
+    val uiState: StateFlow<UserDetailsUiState>
         get() = _uiState.asStateFlow()
-
-    fun loadUsers(searchKey: String = "") {
-        if (searchKey.isEmpty()) {
-            loadAllUsers()
-        } else {
-            loadSearchedUsers(searchKey)
-        }
-    }
-
-    private fun loadAllUsers() {
+    fun loadUserDetails(userId: String) {
         viewModelScope.launch {
             displayLoading()
-            when (val result = gitHubUserRepository.getUsers()) {
+            when (val result = gitHubUserRepository.getUserDetails(userId)) {
                 is ApiResult.Success -> {
                     _uiState.update {
                         it.copy(
-                            userItems = result.data,
+                            userDetails = result.data,
                             isLoading = false,
                             error = null
                         )
                     }
                 }
-
-                else -> handleError(result)
-            }
-
-        }
-    }
-
-    private fun loadSearchedUsers(searchKey: String = "") {
-        viewModelScope.launch {
-            displayLoading()
-            when (val result = gitHubUserRepository.getSearchUsers(searchKey)) {
-                is ApiResult.Success -> {
-                    _uiState.update {
-                        it.copy(
-                            userItems = result.data.items ?: emptyList(),
-                            isLoading = false,
-                            error = null
-                        )
-                    }
-                }
-
                 else -> handleError(result)
             }
         }
     }
-
     private fun displayLoading() {
         _uiState.update {
             it.copy(
@@ -77,7 +45,6 @@ class UserListViewModel @Inject constructor(
             )
         }
     }
-
     private fun handleError(result: ApiResult<*>) {
         _uiState.update {
             it.copy(
