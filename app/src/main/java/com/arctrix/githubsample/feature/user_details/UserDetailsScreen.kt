@@ -379,12 +379,12 @@ fun UserProfilePreview() {
     val navController = rememberNavController()
 
     val userDetail = UserDetail(
-        login = "eishon",
+        login = "User1",
         avatarUrl = "https://avatars.githubusercontent.com/u/31154892?v=4",
-        htmlUrl = "https://github.com/eishon",
-        reposUrl = "https://api.github.com/users/eishon/repos",
+        htmlUrl = "https://github.com/User1",
+        reposUrl = "https://api.github.com/users/User1/repos",
         name = "lazy_potato_0_0_",
-        company = "Rakuten",
+        company = "GitHub",
         location = "Tokyo, Japan",
         bio = "Mobile Application Developer (Android, iOS, Flutter, Unity)",
         publicRepos = 29,

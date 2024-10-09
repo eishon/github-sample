@@ -220,10 +220,10 @@ fun UserItemPreview() {
     val backgroundColor = colorResource(id = R.color.background)
 
     val user = UserItem(
-        id = 31154892,
-        login = "eishon",
+        id = 1,
+        login = "User1",
         avatarUrl = "https://avatars.githubusercontent.com/u/31154892?v=4",
-        htmlUrl = "https://github.com/eishon"
+        htmlUrl = "https://github.com/User1"
     )
 
     GithubSampleTheme {
@@ -244,22 +244,22 @@ fun UserListPreview() {
 
     val users = listOf(
         UserItem(
-            id = 31154892,
-            login = "eishon",
+            id = 1,
+            login = "User1",
             avatarUrl = "https://avatars.githubusercontent.com/u/31154892?v=4",
-            htmlUrl = "https://github.com/eishon"
+            htmlUrl = "https://github.com/User1"
         ),
         UserItem(
-            id = 94143866,
-            login = "EishonPan",
+            id = 2,
+            login = "User2",
             avatarUrl = "https://avatars.githubusercontent.com/u/94143866?v=4",
-            htmlUrl = "https://github.com/EishonPan"
+            htmlUrl = "https://github.com/User2"
         ),
         UserItem(
-            id = 18392689,
-            login = "Eishonoosh",
+            id = 3,
+            login = "User3",
             avatarUrl = "https://avatars.githubusercontent.com/u/18392689?v=4",
-            htmlUrl = "https://github.com/Eishonoosh"
+            htmlUrl = "https://github.com/User3"
         )
     )
 

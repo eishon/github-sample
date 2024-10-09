@@ -10,7 +10,5 @@ import kotlinx.parcelize.Parcelize
 data class SearchUserResponse(
     @Json(name = "total_count")
     val totalCount: Int,
-    @Json(name = "incomplete_results")
-    val incompleteResults: Boolean,
     val items: List<UserItem>
 ) : Parcelable
