@@ -2,7 +2,6 @@ package com.arctrix.githubsample.feature.user_list
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -50,21 +49,13 @@ import com.arctrix.githubsample.feature.common.theme.GithubSampleTheme
 import com.arctrix.githubsample.feature.common.widgets.ProfileImage
 import com.arctrix.githubsample.feature.common.widgets.ProfileLink
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserListScreen(navController: NavController, viewModel: UserListViewModel = hiltViewModel()) {
     val backgroundColor = colorResource(id = R.color.background)
-    colorResource(id = R.color.content)
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     var searchText by rememberSaveable { mutableStateOf("") }
-
-    var expanded by rememberSaveable { mutableStateOf(false) }
-    val searchBarPadding by animateDpAsState(
-        targetValue = if (expanded) 0.dp else 16.dp,
-        label = ""
-    )
 
     // Call the function once when the screen is first created
     LaunchedEffect(Unit) {
@@ -73,30 +64,13 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel = 
 
     Scaffold(
         topBar = {
-            SearchBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = searchBarPadding)
-                    .semantics { traversalIndex = 0f },
-                inputField = {
-                    SearchBarDefaults.InputField(
-                        query = searchText,
-                        onQueryChange = { searchText = it },
-                        onSearch = {
-                            expanded = false
-                            viewModel.loadUsers(searchText)
-                        },
-                        expanded = expanded,
-                        onExpandedChange = { expanded = it },
-                        placeholder = { Text(stringResource(id = R.string.search_hint)) },
-                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                    )
+            UserSearchBar(
+                searchText = searchText,
+                onSearch = {
+                    viewModel.loadUsers(searchText)
                 },
-                expanded = expanded,
-                onExpandedChange = { expanded = it },
-            ) {
-                // implement for search suggestions
-            }
+                onQueryChange = { searchText = it }
+            )
         },
         content = { innerPadding ->
             Column(
@@ -153,6 +127,45 @@ fun UserList(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UserSearchBar(
+    searchText: String,
+    onSearch: (String) -> Unit,
+    onQueryChange: (String) -> Unit
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    val searchBarPadding by animateDpAsState(
+        targetValue = if (expanded) 0.dp else 16.dp,
+        label = ""
+    )
+
+    SearchBar(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = searchBarPadding)
+            .semantics { traversalIndex = 0f },
+        inputField = {
+            SearchBarDefaults.InputField(
+                query = searchText,
+                onQueryChange = onQueryChange,
+                onSearch = {
+                    expanded = false
+                    onSearch(it)
+                },
+                expanded = expanded,
+                onExpandedChange = { expanded = it },
+                placeholder = { Text(stringResource(id = R.string.search_hint)) },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            )
+        },
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+    ) {
+        // implement for search suggestions
+    }
+}
+
 @Composable
 fun UserListItem(
     userItem: UserItem,
@@ -191,9 +204,70 @@ fun UserListItem(
 
 @Preview(showBackground = true)
 @Composable
-fun UserListScreenPreview() {
-    val navController = rememberNavController()
+fun UserSearchPreview() {
     GithubSampleTheme {
-        UserListScreen(navController = navController)
+        UserSearchBar(
+            searchText = "",
+            onSearch = { },
+            onQueryChange = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun UserItemPreview() {
+    val backgroundColor = colorResource(id = R.color.background)
+
+    val user = UserItem(
+        id = 31154892,
+        login = "eishon",
+        avatarUrl = "https://avatars.githubusercontent.com/u/31154892?v=4",
+        htmlUrl = "https://github.com/eishon"
+    )
+
+    GithubSampleTheme {
+        UserListItem(
+            userItem = user,
+            backgroundColor = backgroundColor,
+            onProfileUrlClick = { _, _ -> },
+            onClick = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun UserListPreview() {
+    val backgroundColor = colorResource(id = R.color.background)
+    val navController = rememberNavController()
+
+    val users = listOf(
+        UserItem(
+            id = 31154892,
+            login = "eishon",
+            avatarUrl = "https://avatars.githubusercontent.com/u/31154892?v=4",
+            htmlUrl = "https://github.com/eishon"
+        ),
+        UserItem(
+            id = 94143866,
+            login = "EishonPan",
+            avatarUrl = "https://avatars.githubusercontent.com/u/94143866?v=4",
+            htmlUrl = "https://github.com/EishonPan"
+        ),
+        UserItem(
+            id = 18392689,
+            login = "Eishonoosh",
+            avatarUrl = "https://avatars.githubusercontent.com/u/18392689?v=4",
+            htmlUrl = "https://github.com/Eishonoosh"
+        )
+    )
+
+    GithubSampleTheme {
+        UserList(
+            users = users,
+            navController = navController,
+            backgroundColor = backgroundColor
+        )
     }
 }

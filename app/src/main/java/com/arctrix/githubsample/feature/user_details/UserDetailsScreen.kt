@@ -1,7 +1,7 @@
 package com.arctrix.githubsample.feature.user_details
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,9 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -158,8 +154,21 @@ fun UserProfile(
                     VerticalSpace()
                 }
 
-                ProfileLink(profileUrl = htmlUrl) { profileUrl ->
-                    navController.navigate("webview/$login/$profileUrl")
+                Row(
+                    modifier = Modifier.fillMaxWidth(0.8f),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    HorizontalSpace(8)
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_link),
+                        contentDescription = "profile",
+                        tint = contentColor
+                    )
+                    HorizontalSpace(16)
+                    ProfileLink(profileUrl = htmlUrl) { profileUrl ->
+                        navController.navigate("webview/$login/$profileUrl")
+                    }
+                    HorizontalSpace(8)
                 }
 
                 VerticalSpace()
@@ -362,11 +371,85 @@ fun RepoListItem(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(backgroundColor = 0xFFFFFFF, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun UserDetailsScreenPreview() {
+fun UserProfilePreview() {
+    val backgroundColor = colorResource(id = R.color.background)
+    val contentColor = colorResource(id = R.color.content)
     val navController = rememberNavController()
-    GithubSampleTheme{
-        UserDetailsScreen(navController = navController, userId = "arctrix")
+
+    val userDetail = UserDetail(
+        login = "eishon",
+        avatarUrl = "https://avatars.githubusercontent.com/u/31154892?v=4",
+        htmlUrl = "https://github.com/eishon",
+        reposUrl = "https://api.github.com/users/eishon/repos",
+        name = "lazy_potato_0_0_",
+        company = "Rakuten",
+        location = "Tokyo, Japan",
+        bio = "Mobile Application Developer (Android, iOS, Flutter, Unity)",
+        publicRepos = 29,
+        followers = 5,
+        following = 3
+    )
+
+    GithubSampleTheme {
+        LazyColumn {
+            item {
+                UserProfile(
+                    userDetail = userDetail,
+                    backgroundColor = backgroundColor,
+                    contentColor = contentColor,
+                    navController = navController
+                )
+            }
+        }
+    }
+}
+
+@Preview(backgroundColor = 0xFFFFFFF, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun UserReposPreview() {
+    val backgroundColor = colorResource(id = R.color.background)
+    val contentColor = colorResource(id = R.color.content)
+    val navController = rememberNavController()
+
+    val userRepos = listOf(
+        UserRepo(
+            name = "Android-Samples",
+            description = "This repository is for android application code samples.",
+            htmlUrl = "https://github.com/eishon/Android-Samples",
+            stargazersCount = 1,
+            watchersCount = 1,
+            language = "Kotlin"
+        ),
+        UserRepo(
+            name = "Appium-Automation-Testing",
+            description = null,
+            htmlUrl = "https://github.com/eishon/Appium-Automation-Testing",
+            language = "Java",
+            stargazersCount = 0,
+            watchersCount = 0
+        ),
+        UserRepo(
+            name = "Arduino-Speed-Measurement",
+            description = "An simple Arduino setup for measuring speed of a moving object and Android app for showing the speed.",
+            htmlUrl = "https://github.com/eishon/Arduino-Speed-Measurement",
+            language = "Java",
+            stargazersCount = 1,
+            watchersCount = 1
+        )
+    )
+
+    GithubSampleTheme {
+        LazyColumn {
+            item {
+                UserRepos(
+                    userRepos = userRepos,
+                    backgroundColor = backgroundColor,
+                    contentColor = contentColor,
+                    navController = navController
+                )
+            }
+        }
     }
 }
