@@ -46,7 +46,6 @@ class UserListViewModel @Inject constructor(
 
                 else -> handleError(result)
             }
-
         }
     }
 

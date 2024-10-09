@@ -427,8 +427,8 @@ fun UserReposPreview() {
             description = null,
             htmlUrl = "https://github.com/eishon/Appium-Automation-Testing",
             language = "Java",
-            stargazersCount = 0,
-            watchersCount = 0
+            stargazersCount = 1,
+            watchersCount = 2
         ),
         UserRepo(
             name = "Arduino-Speed-Measurement",
