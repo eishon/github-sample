@@ -58,8 +58,10 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel = 
     var searchText by rememberSaveable { mutableStateOf("") }
 
     // Call the function once when the screen is first created
-    LaunchedEffect(Unit) {
-        viewModel.loadUsers(searchText)
+    LaunchedEffect(true) {
+        if (uiState.users.isEmpty()) {
+            viewModel.loadUsers(searchText)
+        }
     }
 
     Scaffold(

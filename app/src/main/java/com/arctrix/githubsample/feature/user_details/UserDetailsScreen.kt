@@ -60,8 +60,12 @@ fun UserDetailsScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     // Call the function once when the screen is first created
-    LaunchedEffect(Unit) {
-        userId?.let { viewModel.loadUserDetails(it) }
+    LaunchedEffect(true) {
+        userId?.let {
+            if (uiState.userDetail == null) {
+                viewModel.loadUserDetails(it)
+            }
+        }
     }
 
     // Implement the UI to show user details based on userId
