@@ -1,5 +1,6 @@
 package com.arctrix.githubsample.feature.user_details
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arctrix.githubsample.data.model.ApiResult
@@ -43,7 +44,8 @@ class UserDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun loadUserRepos(userId: String) {
+    @VisibleForTesting
+    fun loadUserRepos(userId: String) {
         viewModelScope.launch {
             when (val result = gitHubUserRepository.getUserRepos(userId)) {
                 is ApiResult.Success -> {
