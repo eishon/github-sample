@@ -5,6 +5,7 @@ import com.arctrix.githubsample.data.model.ApiResult
 import com.arctrix.githubsample.data.model.github.SearchUserResponse
 import com.arctrix.githubsample.data.model.github.UserDetail
 import com.arctrix.githubsample.data.model.github.UserItem
+import com.arctrix.githubsample.data.model.github.UserRepo
 import com.arctrix.githubsample.data.repository.GitHubRepository
 import com.arctrix.githubsample.data.repository.helper.RepositoryHelper
 
@@ -22,5 +23,10 @@ class GitHubRepositoryImpl(private val gitHubApi: GitHubApi) : GitHubRepository 
     override suspend fun getUserDetails(userId: String): ApiResult<UserDetail> =
         RepositoryHelper.execute {
             gitHubApi.getUsersDetails(userId)
+        }
+
+    override suspend fun getUserRepos(userId: String): ApiResult<List<UserRepo>> =
+        RepositoryHelper.execute {
+            gitHubApi.getUserRepos(userId)
         }
 }

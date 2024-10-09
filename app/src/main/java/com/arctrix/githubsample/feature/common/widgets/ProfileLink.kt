@@ -9,8 +9,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import com.arctrix.githubsample.util.UrlUtil
 
 @Composable
 fun ProfileLink(profileUrl: String, onClick: (String) -> Unit) {
@@ -29,11 +28,7 @@ fun ProfileLink(profileUrl: String, onClick: (String) -> Unit) {
     BasicText(
         text = annotatedString,
         modifier = Modifier.clickable {
-            val encodedUrl = URLEncoder.encode(
-                profileUrl,
-                StandardCharsets.UTF_8.toString()
-            )
-            onClick(encodedUrl)
+            onClick(UrlUtil.encodeUrl(profileUrl))
         }
     )
 }

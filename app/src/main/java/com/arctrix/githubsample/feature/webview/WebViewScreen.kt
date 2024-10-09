@@ -13,10 +13,10 @@ import androidx.navigation.NavController
 import com.arctrix.githubsample.feature.common.widgets.BaseAppBar
 
 @Composable
-fun WebViewScreen(navController: NavController, userId: String?, url: String?) {
+fun WebViewScreen(navController: NavController, title: String?, url: String?) {
     Scaffold(
         topBar = {
-            BaseAppBar(title = userId, navController = navController)
+            BaseAppBar(title = title, navController = navController)
         },
         content = { innerPadding ->
             if (url.isNullOrEmpty()) {

@@ -16,10 +16,12 @@ import javax.inject.Inject
 class UserDetailsViewModel @Inject constructor(
     private val gitHubUserRepository: GitHubRepository
 ) : ViewModel() {
+
     private val _uiState: MutableStateFlow<UserDetailsUiState> =
         MutableStateFlow(UserDetailsUiState())
     val uiState: StateFlow<UserDetailsUiState>
         get() = _uiState.asStateFlow()
+
     fun loadUserDetails(userId: String) {
         viewModelScope.launch {
             displayLoading()
@@ -32,11 +34,32 @@ class UserDetailsViewModel @Inject constructor(
                             error = null
                         )
                     }
+
+                    loadUserRepos(userId)
                 }
+
                 else -> handleError(result)
             }
         }
     }
+
+    private fun loadUserRepos(userId: String) {
+        viewModelScope.launch {
+            when (val result = gitHubUserRepository.getUserRepos(userId)) {
+                is ApiResult.Success -> {
+                    _uiState.update {
+                        it.copy(
+                            userRepos = result.data,
+                            error = null
+                        )
+                    }
+                }
+
+                else -> handleError(result)
+            }
+        }
+    }
+
     private fun displayLoading() {
         _uiState.update {
             it.copy(
@@ -45,6 +68,7 @@ class UserDetailsViewModel @Inject constructor(
             )
         }
     }
+
     private fun handleError(result: ApiResult<*>) {
         _uiState.update {
             it.copy(

@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
@@ -52,8 +53,8 @@ import com.arctrix.githubsample.feature.common.widgets.ProfileLink
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserListScreen(navController: NavController, viewModel: UserListViewModel = hiltViewModel()) {
-    val isDarkTheme = isSystemInDarkTheme()
-    val backgroundColor = if (isDarkTheme) Color.Black else Color.White
+    val backgroundColor = colorResource(id = R.color.background)
+    colorResource(id = R.color.content)
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
