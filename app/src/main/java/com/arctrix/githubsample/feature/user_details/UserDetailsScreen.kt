@@ -46,6 +46,7 @@ import com.arctrix.githubsample.feature.common.widgets.HorizontalSpace
 import com.arctrix.githubsample.feature.common.widgets.ProfileImage
 import com.arctrix.githubsample.feature.common.widgets.ProfileLink
 import com.arctrix.githubsample.feature.common.widgets.VerticalSpace
+import com.arctrix.githubsample.util.RouteUtil
 import com.arctrix.githubsample.util.UrlUtil
 
 @Composable
@@ -170,7 +171,7 @@ fun UserProfile(
                     )
                     HorizontalSpace(16)
                     ProfileLink(profileUrl = htmlUrl) { profileUrl ->
-                        navController.navigate("webview/$login/$profileUrl")
+                        navController.navigate(RouteUtil.createWebViewRoute(login, profileUrl))
                     }
                     HorizontalSpace(8)
                 }
@@ -240,7 +241,7 @@ fun UserRepos(
                 backgroundColor = backgroundColor,
                 contentColor = contentColor,
                 onClick = { url ->
-                    navController.navigate("webview/${repos[i].name}/$url")
+                    navController.navigate(RouteUtil.createWebViewRoute(repos[i].name, url))
                 }
             )
         }

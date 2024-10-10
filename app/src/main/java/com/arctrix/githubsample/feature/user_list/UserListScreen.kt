@@ -54,6 +54,7 @@ import com.arctrix.githubsample.data.model.github.UserItem
 import com.arctrix.githubsample.feature.common.theme.GithubSampleTheme
 import com.arctrix.githubsample.feature.common.widgets.ProfileImage
 import com.arctrix.githubsample.feature.common.widgets.ProfileLink
+import com.arctrix.githubsample.util.RouteUtil
 import com.arctrix.githubsample.util.TextUtil
 import kotlinx.coroutines.launch
 
@@ -155,10 +156,10 @@ fun UserList(
                 inverted = it % 2 == 0,
                 backgroundColor = backgroundColor,
                 onClick = { userId ->
-                    navController.navigate("details/$userId")
+                    navController.navigate(RouteUtil.createUserDetailsRoute(userId))
                 },
                 onProfileUrlClick = { userId, profileUrl ->
-                    navController.navigate("webview/$userId/$profileUrl")
+                    navController.navigate(RouteUtil.createWebViewRoute(userId, profileUrl))
                 }
             )
         }
