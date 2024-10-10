@@ -17,4 +17,5 @@ data class UserRepo(
     val stargazersCount: Int,
     @Json(name = "watchers_count")
     val watchersCount: Int,
+    val fork: Boolean
 ) : Parcelable

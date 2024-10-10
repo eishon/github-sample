@@ -100,7 +100,7 @@ fun UserDetailsScreen(
                             item { VerticalSpace() }
                             item {
                                 UserRepos(
-                                    userRepos = userRepos,
+                                    repos = userRepos,
                                     backgroundColor = backgroundColor,
                                     contentColor = contentColor,
                                     navController = navController
@@ -227,18 +227,23 @@ fun UserProfile(
 
 @Composable
 fun UserRepos(
-    userRepos: List<UserRepo>,
+    repos: List<UserRepo>,
     backgroundColor: Color,
     contentColor: Color,
     navController: NavController
 ) {
-    userRepos.apply {
-        ReposList(
-            repos = userRepos,
-            navController = navController,
-            backgroundColor = backgroundColor,
-            contentColor = contentColor
-        )
+    // Repositories which are not forked
+    repos.filter { !it.fork }.let { userRepos ->
+        repeat(userRepos.size) { i ->
+            RepoListItem(
+                repoItem = userRepos[i],
+                backgroundColor = backgroundColor,
+                contentColor = contentColor,
+                onClick = { url ->
+                    navController.navigate("webview/${repos[i].name}/$url")
+                }
+            )
+        }
     }
 }
 
@@ -278,25 +283,6 @@ fun TextWithCount(title: String, value: String, backgroundColor: Color) {
             VerticalSpace(4)
             Text(text = value, textAlign = TextAlign.Center)
         }
-    }
-}
-
-@Composable
-fun ReposList(
-    repos: List<UserRepo>,
-    navController: NavController,
-    backgroundColor: Color,
-    contentColor: Color
-) {
-    repeat(repos.size) {
-        RepoListItem(
-            repoItem = repos[it],
-            backgroundColor = backgroundColor,
-            contentColor = contentColor,
-            onClick = { url ->
-                navController.navigate("webview/${repos[it].name}/$url")
-            }
-        )
     }
 }
 
@@ -424,7 +410,8 @@ fun UserReposPreview() {
             htmlUrl = "https://github.com/eishon/Android-Samples",
             stargazersCount = 1,
             watchersCount = 1,
-            language = "Kotlin"
+            language = "Kotlin",
+            fork = false
         ),
         UserRepo(
             name = "Appium-Automation-Testing",
@@ -432,7 +419,8 @@ fun UserReposPreview() {
             htmlUrl = "https://github.com/eishon/Appium-Automation-Testing",
             language = "Java",
             stargazersCount = 1,
-            watchersCount = 2
+            watchersCount = 2,
+            fork = true
         ),
         UserRepo(
             name = "Arduino-Speed-Measurement",
@@ -440,7 +428,8 @@ fun UserReposPreview() {
             htmlUrl = "https://github.com/eishon/Arduino-Speed-Measurement",
             language = "Java",
             stargazersCount = 1,
-            watchersCount = 1
+            watchersCount = 1,
+            fork = false
         )
     )
 
@@ -448,7 +437,7 @@ fun UserReposPreview() {
         LazyColumn {
             item {
                 UserRepos(
-                    userRepos = userRepos,
+                    repos = userRepos,
                     backgroundColor = backgroundColor,
                     contentColor = contentColor,
                     navController = navController
