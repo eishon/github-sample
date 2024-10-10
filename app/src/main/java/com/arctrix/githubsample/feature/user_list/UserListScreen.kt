@@ -22,11 +22,15 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.arctrix.githubsample.R
@@ -48,6 +53,8 @@ import com.arctrix.githubsample.data.model.github.UserItem
 import com.arctrix.githubsample.feature.common.theme.GithubSampleTheme
 import com.arctrix.githubsample.feature.common.widgets.ProfileImage
 import com.arctrix.githubsample.feature.common.widgets.ProfileLink
+import com.arctrix.githubsample.util.TextUtil
+import kotlinx.coroutines.launch
 
 @Composable
 fun UserListScreen(navController: NavController, viewModel: UserListViewModel = hiltViewModel()) {
@@ -57,6 +64,9 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel = 
 
     var searchText by rememberSaveable { mutableStateOf("") }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
     // Call the function once when the screen is first created
     LaunchedEffect(true) {
         if (uiState.users.isEmpty()) {
@@ -65,11 +75,30 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel = 
     }
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        },
         topBar = {
             UserSearchBar(
                 searchText = searchText,
                 onSearch = {
-                    viewModel.loadUsers(searchText)
+                    TextUtil.sanitizeSearchInput(input = searchText).let { sanitizedText ->
+                        viewModel.loadUsers(sanitizedText)
+                        if (searchText != sanitizedText) {
+                            if (searchText.trim() != sanitizedText.trim()) {
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "Input was sanitized to avoid invalid input.",
+                                        actionLabel = "Dismiss"
+                                    )
+                                }
+                            }
+                            searchText = sanitizedText
+                        }
+                    }
                 },
                 onQueryChange = { searchText = it }
             )
