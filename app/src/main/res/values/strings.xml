@@ -2,4 +2,8 @@
     <string name="app_name">Github Sample</string>
 
     <string name="search_hint">Search Github Users</string>
+    <string name="no_user_found">No user found with provided input</string>
+
+    <string name="input_sanitized">Input was sanitized to avoid invalid input.</string>
+    <string name="dismiss">Dismiss</string>
 </resources>

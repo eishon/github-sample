@@ -22,6 +22,7 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -67,6 +68,9 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel = 
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
+    val message = stringResource(id = R.string.input_sanitized)
+    val label = stringResource(id = R.string.dismiss)
+
     // Call the function once when the screen is first created
     LaunchedEffect(true) {
         if (uiState.users.isEmpty()) {
@@ -91,8 +95,9 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel = 
                             if (searchText.trim() != sanitizedText.trim()) {
                                 coroutineScope.launch {
                                     snackbarHostState.showSnackbar(
-                                        message = "Input was sanitized to avoid invalid input.",
-                                        actionLabel = "Dismiss"
+                                        message = message,
+                                        actionLabel = label,
+                                        duration = SnackbarDuration.Short
                                     )
                                 }
                             }
@@ -117,6 +122,8 @@ fun UserListScreen(navController: NavController, viewModel: UserListViewModel = 
                     CircularProgressIndicator()
                 } else if (uiState.error.isNullOrEmpty().not()) {
                     Text(text = "Error: ${uiState.error}")
+                } else if (uiState.users.isEmpty()) {
+                    Text(text = stringResource(id = R.string.no_user_found))
                 } else {
                     UserList(
                         users = uiState.users,
