@@ -128,7 +128,8 @@ class GitHubUserRepositoryImplTest {
                 htmlUrl = "https://github.com/eishon/Android-Samples",
                 stargazersCount = 1,
                 watchersCount = 1,
-                language = "Kotlin"
+                language = "Kotlin",
+                fork = false
             ),
             UserRepo(
                 name = "Appium-Automation-Testing",
@@ -136,7 +137,8 @@ class GitHubUserRepositoryImplTest {
                 htmlUrl = "https://github.com/eishon/Appium-Automation-Testing",
                 language = "Java",
                 stargazersCount = 0,
-                watchersCount = 0
+                watchersCount = 0,
+                fork = true
             ),
             UserRepo(
                 name = "Arduino-Speed-Measurement",
@@ -144,7 +146,8 @@ class GitHubUserRepositoryImplTest {
                 htmlUrl = "https://github.com/eishon/Arduino-Speed-Measurement",
                 language = "Java",
                 stargazersCount = 1,
-                watchersCount = 1
+                watchersCount = 1,
+                fork = false
             )
         )
         `when`(mockApi.getUserRepos(anyString())).thenReturn(userRepos)

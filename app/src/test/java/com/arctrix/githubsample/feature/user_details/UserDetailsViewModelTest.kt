@@ -95,7 +95,8 @@ class UserDetailsViewModelTest {
                 htmlUrl = "https://github.com/eishon/Android-Samples",
                 stargazersCount = 1,
                 watchersCount = 1,
-                language = "Kotlin"
+                language = "Kotlin",
+                fork = false
             ),
             UserRepo(
                 name = "Appium-Automation-Testing",
@@ -103,7 +104,8 @@ class UserDetailsViewModelTest {
                 htmlUrl = "https://github.com/eishon/Appium-Automation-Testing",
                 language = "Java",
                 stargazersCount = 1,
-                watchersCount = 2
+                watchersCount = 2,
+                fork = true
             ),
             UserRepo(
                 name = "Arduino-Speed-Measurement",
@@ -111,7 +113,8 @@ class UserDetailsViewModelTest {
                 htmlUrl = "https://github.com/eishon/Arduino-Speed-Measurement",
                 language = "Java",
                 stargazersCount = 1,
-                watchersCount = 1
+                watchersCount = 1,
+                fork = false
             )
         )
         `when`(repository.getUserRepos(anyString())).thenReturn(ApiResult.Success(userRepos))
